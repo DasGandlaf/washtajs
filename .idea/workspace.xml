@@ -38,6 +38,11 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "IntelliLang.Configuration",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "repository"
+    ]
   }
 }]]></component>
   <component name="RunManager">
@@ -65,11 +70,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1717030517388</updated>
-      <workItem from="1717030519534" duration="1345000" />
+      <workItem from="1717030519534" duration="4422000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: create, modify, and wait functionality working">
+      <option name="closed" value="true" />
+      <created>1717031894329</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717031894329</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: create, modify, and wait functionality working" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: create, modify, and wait functionality working" />
   </component>
 </project>

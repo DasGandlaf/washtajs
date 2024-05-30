@@ -3,37 +3,55 @@
   <title>Washta</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html {
+        overflow: hidden;
+    }
+
+    .expo-out {
+        transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
   <script type="module">
     import { twMerge } from 'https://cdn.skypack.dev/tailwind-merge';
 
     let root = null
-    let animStarted = false
-
-    function start() {
-      animStarted = true
-    }
+    let started = false
+    let repeat = false
 
     /**
-     * @param {string} classes - Css classes
-     * @param {string} content - Content
+     * @param {string?} classes - Css classes
+     * @param {string?} content - Content
      */
     function c(classes, content) {
       let child = document.createElement('div');
       child.innerHTML =
-        `<div class="${classes}">${content ? content : ''}</div>`
+        `<div class="${classes?classes:''}">${content ? content : ''}</div>`
       ;
       child = child.firstChild;
-      return child
+      return {
+        // Modifies
+        m: (newClasses) => {
+          child.className = twMerge(child.className, newClasses)
+        },
+        // Appends child
+        c: (childClasses, content) => {
+          const newChild = c(childClasses, content)
+          child.appendChild(newChild.html)
+          return newChild
+        },
+        // Deletes itself
+        d: () => {
+          child.parentNode.removeChild(child)
+        },
+        html: child
+      }
     }
 
     function d(classes, content, ...children) {
       const child = c(classes, content)
-      root.appendChild(child)
-      return {
-        m: (newClasses) => {
-          child.className = twMerge(child.className, newClasses)
-        }
-      }
+      root.appendChild(child.html)
+      return child
     }
 
     /**
@@ -42,7 +60,7 @@
      */
     function w(time) {
       return new Promise(resolve => {
-        if(animStarted)
+        if(started)
           setTimeout(() => {resolve()}, time)
         else
           resolve()
@@ -50,23 +68,80 @@
     }
 
     async function draw() {
-      const rectangle = d("bg-red-500 size-5 transition-all")
-      await w(1000)
-      rectangle.m("size-10")
-      await w(1000)
-      rectangle.m("size-20")
-      await w(1000)
-      start()
-      rectangle.m("bg-blue-500 size-20")
-      await w(1000)
+      started = true
+      const rectangle = d("bg-red-500 size-10 transition-all rounded-md center")
+      await w(500)
       rectangle.m("bg-red-500 size-10")
+      await w(500)
+      const smallersConts = [
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+        d("flex flex-col gap-1"),
+      ]
+      const cubes = []
+      for(let i = 0; i < smallersConts.length; ++i) {
+        const cont = smallersConts[i]
+        await w(10)
+        const smaller = cont.c("bg-red-500 size-0 transition-all rounded-md")
+        cubes.push(smaller)
+        await w(10)
+        smaller.m("size-10")
+      }
+      await w(500)
+      rectangle.m("opacity-0")
+      for(let i = 0; i < smallersConts.length; ++i) {
+        await w(10)
+        const smallers = []
+        for(let j = 0; j < smallersConts.length; ++j) {
+          const col = smallersConts[j]
+          const newEl = col.c("bg-red-500 size-0 transition-all rounded-md")
+          smallers.push(newEl)
+          cubes.push(newEl)
+        }
+        await w(10)
+        for(let j = 0; j < smallers.length; ++j) {
+          const smaller = smallers[j]
+          smaller.m("size-10")
+        }
+      }
+      await w(500)
+      root.className = `${root.className} rotate-[720deg] duration-1000 gap-0`
+      await w(500)
+      for(let i = 0; i < cubes.length; ++i) {
+        cubes[i].m("size-0 p-0")
+      }
+      rectangle.m("opacity-100")
+      await w(500)
+      for(let i = 0; i < cubes.length; ++i) {
+        cubes[i].d()
+      }
+      await w(500)
+      rectangle.m("rotate-[720deg] size-48 bg-blue-500 duration-1000")
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       root = document.getElementById("content")
-      draw()
+      await draw()
     });
   </script>
 </head>
-<body id="content" class="bg-gray-900 flex">
+<body id="content" class="bg-gray-900 flex justify-center gap-1 items-center transition-all expo-out relative">
 </body>
